@@ -28,7 +28,6 @@ jobs:
         run: |
           ls -lah 
           cp ./build/advanced_https_ota.bin advanced_https_ota-${{ matrix.targets }}.bin
-          cp ./build/storage.bin storage-${{ matrix.targets }}.bin
       - name: Archive Firmware Files
         uses: actions/upload-artifact@v3
         with:
