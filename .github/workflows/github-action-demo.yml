@@ -33,7 +33,7 @@ jobs:
         with:
           name: advanced_https_ota-${{ matrix.targets }}.bin
           path: |
-            ./build/advanced_https_ota-${{ matrix.targets }}.bin
+            /build/advanced_https_ota-${{ matrix.targets }}.bin
 
   release:
     needs: build
