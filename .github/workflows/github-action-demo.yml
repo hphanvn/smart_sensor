@@ -31,7 +31,7 @@ jobs:
       - name: Archive Firmware Files
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.targets }}.bin
+          name: advanced_https_ota-${{ matrix.targets }}.bin
           path: "*-${{ matrix.targets }}.bin"
 
   release:
