@@ -1,7 +1,7 @@
 on:
   push:
   pull_request:
-    branches: [master]
+    branches: [main]
 
 permissions:
   contents: write
@@ -23,12 +23,11 @@ jobs:
         with:
           esp_idf_version: v4.4.3
           target: ${{ matrix.targets }}
-          path: "examples/esp_ghota_example"
+          path: "test_esp32_ota"
       - name: Rename artifact
         run: |
           ls -lah 
-          cp examples/esp_ghota_example/build/esp_ghota_example.bin esp_ghota_example-${{ matrix.targets }}.bin
-          cp examples/esp_ghota_example/build/storage.bin storage-${{ matrix.targets }}.bin
+          cp test_esp32_ota/build/advanced_https_ota.bin advanced_https_ota-${{ matrix.targets }}.bin
       - name: Archive Firmware Files
         uses: actions/upload-artifact@v3
         with:
