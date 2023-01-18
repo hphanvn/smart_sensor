@@ -78,7 +78,7 @@ Thumbs.db
 *.gpl
 *.1
 *.cmake
-CMakeFiles/
+#CMakeFiles/
 CMakeCache.txt
 .cproject
 .settings/
