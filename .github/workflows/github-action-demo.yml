@@ -24,15 +24,12 @@ jobs:
           esp_idf_version: latest
           target: ${{ matrix.targets }}
           path: "."
-      - name: Rename artifact
-        run: |
-          ls -lah 
-          cp ./build/advanced_https_ota.bin advanced_https_ota-${{ matrix.targets }}.bin
       - name: Archive Firmware Files
         uses: actions/upload-artifact@v3
         with:
           name: advanced_https_ota-${{ matrix.targets }}.bin
-          path: "*-${{ matrix.targets }}.bin"
+          path: |
+            build/advanced_https_ota-${{ matrix.targets }}.bin
 
   release:
     needs: build
