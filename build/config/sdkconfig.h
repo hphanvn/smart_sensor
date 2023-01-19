@@ -42,7 +42,7 @@
 #define CONFIG_PARTITION_TABLE_FILENAME "partitions_two_ota.csv"
 #define CONFIG_PARTITION_TABLE_OFFSET 0x8000
 #define CONFIG_PARTITION_TABLE_MD5 1
-#define CONFIG_EXAMPLE_FIRMWARE_UPGRADE_URL "https://192.168.2.106:8070/hello-world.bin"
+#define CONFIG_EXAMPLE_FIRMWARE_UPGRADE_URL "https://github.com/hphanvn/test_esp32_ota/releases/download/firmware/advanced_https_ota-esp32.bin"
 #define CONFIG_EXAMPLE_SKIP_VERSION_CHECK 1
 #define CONFIG_EXAMPLE_OTA_RECV_TIMEOUT 5000
 #define CONFIG_EXAMPLE_CONNECT_WIFI 1

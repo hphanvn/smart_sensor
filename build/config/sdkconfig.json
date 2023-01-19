@@ -254,7 +254,7 @@
     "EXAMPLE_CONNECT_IPV6_PREF_SITE_LOCAL": false,
     "EXAMPLE_CONNECT_IPV6_PREF_UNIQUE_LOCAL": false,
     "EXAMPLE_CONNECT_WIFI": true,
-    "EXAMPLE_FIRMWARE_UPGRADE_URL": "https://192.168.2.106:8070/hello-world.bin",
+    "EXAMPLE_FIRMWARE_UPGRADE_URL": "https://github.com/hphanvn/test_esp32_ota/releases/download/firmware/advanced_https_ota-esp32.bin",
     "EXAMPLE_OTA_RECV_TIMEOUT": 5000,
     "EXAMPLE_SKIP_COMMON_NAME_CHECK": false,
     "EXAMPLE_SKIP_VERSION_CHECK": true,

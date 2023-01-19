@@ -123,7 +123,7 @@ CONFIG_PARTITION_TABLE_MD5=y
 #
 # Example Configuration
 #
-CONFIG_EXAMPLE_FIRMWARE_UPGRADE_URL="https://192.168.2.106:8070/hello-world.bin"
+CONFIG_EXAMPLE_FIRMWARE_UPGRADE_URL="https://github.com/hphanvn/test_esp32_ota/releases/download/firmware/advanced_https_ota-esp32.bin"
 # CONFIG_EXAMPLE_SKIP_COMMON_NAME_CHECK is not set
 CONFIG_EXAMPLE_SKIP_VERSION_CHECK=y
 CONFIG_EXAMPLE_OTA_RECV_TIMEOUT=5000
