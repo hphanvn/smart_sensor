@@ -38,22 +38,22 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Download Firmware Files
-        uses: actions/download-artifact@v2
-        with:
-          path: release
-      - name: Release Firmware
-        uses: ncipollo/release-action@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          artifacts: release/*/*.bin
-          generateReleaseNotes: true
-          allowUpdates: true
-          token: ${{ secrets.GITHUB_TOKEN }}
-      # - name: Add to ESP32_vault repo
-      #   uses: softprops/action-gh-release@v1
+      # - name: Download Firmware Files
+      #   uses: actions/download-artifact@v2
+      #   with:
+      #     path: release
+      # - name: Release Firmware
+      #   uses: ncipollo/release-action@v1
       #   if: startsWith(github.ref, 'refs/tags/')
       #   with:
-      #     repository: ${{ secrets.owner }}/esp32_vault
-      #     token: ${{ secrets.MY_PTA }}
-      #     file: ${{ matrix.targets }}-firmware
+      #     artifacts: release/*/*.bin
+      #     generateReleaseNotes: true
+      #     allowUpdates: true
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Add to ESP32_vault repo
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          repository: ${{ secrets.owner }}/esp32_vault
+          token: ${{ secrets.MY_PTA }}
+          file: ${{ matrix.targets }}-firmware
