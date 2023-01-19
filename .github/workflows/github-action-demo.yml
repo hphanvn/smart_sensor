@@ -50,10 +50,3 @@ jobs:
           generateReleaseNotes: true
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Retrieve URL
-        run: |
-          gh api \
-          -H "Accept: application/vnd.github+json" \
-          /repos/${{ secrets.OWNER }}/${{ secrets.REPO_NAME }}/actions/artifacts
-        env:
-          GITHUB_TOKEN: ${{ secrets.MY_PTA }}
