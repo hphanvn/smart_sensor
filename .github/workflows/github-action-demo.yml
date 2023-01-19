@@ -53,7 +53,7 @@ jobs:
 
   get_asset:
     needs: release
-
+    runs-on: ubuntu-latest
     steps:
       - name: List Releases
         run: gh release list --repo hphanvn/test_esp32_ota
