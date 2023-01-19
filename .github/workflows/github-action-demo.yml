@@ -52,7 +52,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
   get_asset:
-    need: release
+    needs: release
 
     steps:
       - name: List Releases
