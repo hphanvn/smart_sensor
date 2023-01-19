@@ -2,7 +2,6 @@ on:
   push:
   pull_request:
     branches: [main]
-  release:
 
 permissions:
   contents: write
@@ -51,12 +50,10 @@ jobs:
       #     generateReleaseNotes: true
       #     allowUpdates: true
       #     token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Checkout
-        uses: actions/checkout@v3
 
       - name: Add to ESP32_vault repo
         uses: softprops/action-gh-release@v1
-        if: ${{ github.ref == 'refs/heads/main' }}
+        if: startsWith(github.ref, 'refs/heads/main')
         with:
           repository: ${{ secrets.owner }}/esp32_vault
           token: ${{ secrets.MY_PTA }}
