@@ -61,7 +61,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
 
       - name: Fetch asset
-        run: gh release download --repo hphanvn/test_esp32_ota 0.1.2
+        run: gh release download --repo hphanvn/esp32_vault
         env:
           GH_TOKEN: ${{ github.token }}
 
