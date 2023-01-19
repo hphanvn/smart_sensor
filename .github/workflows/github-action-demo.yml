@@ -50,20 +50,8 @@ jobs:
           generateReleaseNotes: true
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
-
-  get_asset:
-    needs: release
-    runs-on: ubuntu-latest
-    steps:
-      - name: List Releases
-        run: gh release list --repo hphanvn/test_esp32_ota
-        env:
-          GH_TOKEN: ${{ github.token }}
-
-      - name: Fetch asset
-        run: gh release download --repo hphanvn/esp32_vault
-        env:
-          GH_TOKEN: ${{ github.token }}
-
-      - name: See what we downloaded
-        run: ls
+      - name: Add to ESP32_vault repo
+        uses: softprops/action-gh-release@v1
+        with:
+          repository: ${{ secrets.owner }}/esp32_vault
+          token: ${{ secrets.MY_PTA }}
