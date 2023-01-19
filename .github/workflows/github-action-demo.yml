@@ -56,3 +56,4 @@ jobs:
         with:
           repository: ${{ secrets.owner }}/esp32_vault
           token: ${{ secrets.MY_PTA }}
+          file: ${{ matrix.targets }}-firmware
