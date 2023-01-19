@@ -38,23 +38,20 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      # - name: Download Firmware Files
-      #   uses: actions/download-artifact@v2
-      #   with:
-      #     path: release
-      # - name: Release Firmware
-      #   uses: ncipollo/release-action@v1
-      #   if: startsWith(github.ref, 'refs/tags/')
-      #   with:
-      #     artifacts: release/*/*.bin
-      #     generateReleaseNotes: true
-      #     allowUpdates: true
-      #     token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Add to ESP32_vault repo
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/heads/main')
+      - name: Download Firmware Files
+        uses: actions/download-artifact@v2
         with:
-          repository: ${{ secrets.owner }}/esp32_vault
-          token: ${{ secrets.MY_PTA }}
-          file: ${{ matrix.targets }}-firmware
+          path: release
+      - name: Release Firmware
+        uses: ncipollo/release-action@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          artifacts: release/*/*.bin
+          generateReleaseNotes: true
+          allowUpdates: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Retrieve URL
+        run: |
+          gh api \
+          -H "Accept: application/vnd.github+json" \
+          /repos/${{ secrets.OWNER }}/${{ secrets.REPO_NAME }}/actions/artifacts/ARTIFACT_ID/ARCHIVE_FORMAT
