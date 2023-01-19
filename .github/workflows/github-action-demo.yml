@@ -58,12 +58,12 @@ jobs:
       - name: List Releases
         run: gh release list --repo hphanvn/test_esp32_ota
         env:
-          GITHUB_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
 
       - name: Fetch asset
         run: gh release download --repo hphanvn/test_esp32_ota 0.1.2
         env:
-          GITHUB_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
 
       - name: See what we downloaded
         run: ls
