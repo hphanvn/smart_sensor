@@ -54,6 +54,6 @@ jobs:
         run: |
           gh api \
           -H "Accept: application/vnd.github+json" \
-          /repos/${{ secrets.OWNER }}/${{ secrets.REPO_NAME }}/actions/artifacts/ARTIFACT_ID/ARCHIVE_FORMAT
+          /repos/${{ secrets.OWNER }}/${{ secrets.REPO_NAME }}/actions/artifacts
         env:
           GITHUB_TOKEN: ${{ secrets.MY_PTA }}
