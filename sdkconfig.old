@@ -123,9 +123,9 @@ CONFIG_PARTITION_TABLE_MD5=y
 #
 # Example Configuration
 #
-CONFIG_EXAMPLE_FIRMWARE_UPGRADE_URL="https://github.com/hphanvn/test_esp32_ota/releases/latest/download/advanced_https_ota-esp32.bin"
+CONFIG_EXAMPLE_FIRMWARE_UPGRADE_URL="https://github.com/hphanvn/esp32_vault/raw/main/advanced_https_ota.bin"
 # CONFIG_EXAMPLE_SKIP_COMMON_NAME_CHECK is not set
-CONFIG_EXAMPLE_SKIP_VERSION_CHECK=y
+# CONFIG_EXAMPLE_SKIP_VERSION_CHECK is not set
 CONFIG_EXAMPLE_OTA_RECV_TIMEOUT=5000
 # end of Example Configuration
 
@@ -401,7 +401,7 @@ CONFIG_HTTPD_PURGE_BUF_LEN=32
 #
 # ESP HTTPS OTA
 #
-CONFIG_OTA_ALLOW_HTTP=y
+# CONFIG_OTA_ALLOW_HTTP is not set
 # end of ESP HTTPS OTA
 
 #
