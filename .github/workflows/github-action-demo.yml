@@ -50,3 +50,15 @@ jobs:
           generateReleaseNotes: true
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Pushes to another repository
+        id: push_directory
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
+        with:
+          source-directory: output/
+          destination-github-username: ${{ secrets.USER_NAME }}
+          destination-repository-name: "esp32_vault"
+          user-email: ${{ secrets.USER_EMAIL }}
+          commit-message: See ORIGIN_COMMIT from $GITHUB_REF
+          target-branch: main

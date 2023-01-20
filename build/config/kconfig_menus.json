@@ -11634,7 +11634,7 @@
                         "id": "FREERTOS_ISR_STACKSIZE",
                         "name": "FREERTOS_ISR_STACKSIZE",
                         "range": [
-                            1536,
+                            2100,
                             32768
                         ],
                         "title": "ISR stack size",
@@ -12844,7 +12844,7 @@
                         "id": "LWIP_TCPIP_TASK_STACK_SIZE",
                         "name": "LWIP_TCPIP_TASK_STACK_SIZE",
                         "range": [
-                            2048,
+                            2560,
                             65536
                         ],
                         "title": "TCP/IP Task Stack Size",
