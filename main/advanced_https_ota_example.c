@@ -52,11 +52,6 @@ static esp_err_t validate_image_header(esp_app_desc_t *new_app_info)
     return ESP_OK;
 }
 
-// const char * get_artifact_url(){
-//     ESP_LOGI(TAG, "Retrieving firmware binary link");
-    
-// }
-//add a comment
 void advanced_ota_example_task(void *pvParameter)
 {
     ESP_LOGI(TAG, "Starting Advanced OTA example");
