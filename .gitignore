@@ -83,7 +83,7 @@ CMakeCache.txt
 .cproject
 .settings/
 .idea/
-#build/
+build/
 .vscode/
 *.pc
 .clangd/
