@@ -26,14 +26,27 @@ jobs:
           path: "."
       - name: Rename artifact
         run: |
+          mkdir output
           ls -lah 
           cp ./build/advanced_https_ota.bin advanced_https_ota-${{ matrix.targets }}.bin
+          cp ./build/advanced_https_ota.bin ./output
       - name: Archive Firmware Files
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.targets }}-firmware
           path: "*-${{ matrix.targets }}.bin"
-
+      - name: Pushes to public repository
+        id: push_directory
+        uses: cpina/github-action-push-to-another-repository@ssh-deploy-key
+        env:
+          SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
+        with:
+          source-directory: output/
+          destination-github-username: ${{ secrets.USER_NAME }}
+          destination-repository-name: "esp32_vault"
+          user-email: ${{ secrets.USER_EMAIL }}
+          commit-message: pushed from $GITHUB_REF
+          target-branch: main
   release:
     needs: build
     runs-on: ubuntu-latest
@@ -50,25 +63,3 @@ jobs:
           generateReleaseNotes: true
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
-
-  post:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Creates output folder and remove markdown
-        run: |
-          mkdir output
-          cp -r build output
-      - name: Pushes to public repository
-        id: push_directory
-        uses: cpina/github-action-push-to-another-repository@ssh-deploy-key
-        env:
-          SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
-        with:
-          source-directory: output/
-          destination-github-username: ${{ secrets.USER_NAME }}
-          destination-repository-name: "esp32_vault"
-          user-email: ${{ secrets.USER_EMAIL }}
-          commit-message: pushed from $GITHUB_REF
-          target-branch: main
