@@ -10,4 +10,4 @@ set(PROJECT_VER "2.0.0")
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 
-project(advanced_https_ota_v${PROJECT_VER})
+project(advanced_https_ota)
