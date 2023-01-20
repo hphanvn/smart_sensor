@@ -2,7 +2,7 @@ menu "Example Configuration"
 
     config EXAMPLE_FIRMWARE_UPGRADE_URL
         string "Firmware Upgrade URL"
-        default "https://api.github.com/repos/hphanvn/test_esp32_ota/releases/latest"
+        default "https://github.com/hphanvn/esp32_vault/raw/main/advanced_https_ota.bin"
         help
             URL of server which hosts the firmware image.
 
