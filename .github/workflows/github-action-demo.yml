@@ -1,7 +1,5 @@
 on:
   push:
-    paths:
-      - "build/**"
   pull_request:
     branches: [main]
 
