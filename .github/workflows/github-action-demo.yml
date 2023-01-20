@@ -35,11 +35,6 @@ jobs:
         with:
           name: ${{ matrix.targets }}-firmware
           path: "*-${{ matrix.targets }}.bin"
-
-  post:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
       - name: Pushes to public repository
         id: push_directory
         uses: cpina/github-action-push-to-another-repository@ssh-deploy-key
@@ -52,7 +47,6 @@ jobs:
           user-email: ${{ secrets.USER_EMAIL }}
           commit-message: pushed from $GITHUB_REF
           target-branch: main
-
   release:
     needs: build
     runs-on: ubuntu-latest
