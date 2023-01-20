@@ -1,5 +1,7 @@
 on:
   push:
+    paths:
+      - "build/**"
   pull_request:
     branches: [main]
 
@@ -50,14 +52,25 @@ jobs:
           generateReleaseNotes: true
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Pushes to another repository
+
+  post:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Creates output folder and remove markdown
+        run: |
+          mkdir output
+          cp -r build output
+      - name: Pushes to public repository
         id: push_directory
-        uses: cpina/github-action-push-to-another-repository@main
+        uses: cpina/github-action-push-to-another-repository@ssh-deploy-key
         env:
           SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
         with:
+          source-directory: output/
           destination-github-username: ${{ secrets.USER_NAME }}
           destination-repository-name: "esp32_vault"
           user-email: ${{ secrets.USER_EMAIL }}
-          commit-message: See ORIGIN_COMMIT from $GITHUB_REF
+          commit-message: pushed from $GITHUB_REF
           target-branch: main
