@@ -3,7 +3,7 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := advanced_https_ota
+PROJECT_NAME := battery_monitor
 
 EXTRA_COMPONENT_DIRS = $(IDF_PATH)/examples/common_components/protocol_examples_common
 
