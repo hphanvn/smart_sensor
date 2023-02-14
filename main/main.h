@@ -15,7 +15,18 @@ typedef enum {
 #define QUEUE_ADC_LEN__BATT_VOLT 10
 #define QUEUE_ADC_SIZE__BATT_VOLT sizeof(int)
 
+#define QUEUE_DHT11_LEN__TEMP 10
+#define QUEUE_DHT11_SIZE__TEMP sizeof(int)
+
+#define QUEUE_DHT11_LEN__HUMI 10
+#define QUEUE_DHT11_SIZE__HUMI sizeof(float)
+
 extern QueueHandle_t xQueueAdcBattVolt;
 extern SemaphoreHandle_t xMutexAdcBattVolt;
 
+extern QueueHandle_t xQueueDht11Humid;
+extern SemaphoreHandle_t xMutexDht11Humid;
+
+extern QueueHandle_t xQueueDht11Temp;
+extern SemaphoreHandle_t xMutexDht11Temp;
 #endif

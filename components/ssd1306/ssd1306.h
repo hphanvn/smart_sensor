@@ -168,6 +168,7 @@ void printSreenTextCenter(SSD1306_t *dev, uint8_t Y, char *data);
  */
 void printSreenNum(SSD1306_t *dev, uint8_t X, uint8_t Y, NUM_OF_DIGIT_t num_digit, int num);
 void printSreen(SSD1306_t *dev, uint8_t X, uint8_t Y, char *data, int num, char *data2);
+void printSreenFloat(SSD1306_t *dev, uint8_t X, uint8_t Y, char *data1, NUM_OF_DIGIT_t num_digit, float num, char *data2);
 void clearSreen(SSD1306_t *dev);
 
 void i2c_master_init(SSD1306_t * dev, int16_t sda, int16_t scl, int16_t reset);

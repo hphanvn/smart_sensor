@@ -1,6 +1,7 @@
 #include <string.h>
 #include <math.h>
 
+
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
@@ -680,6 +681,31 @@ void printSreen(SSD1306_t *dev, uint8_t X, uint8_t Y, char *data1, int num, char
 	strcat(str, strNum);
 	strcat(str, data2);
 	free(strNum);
+	len = strlen(str);
+	//Pad the rest with empty space
+	for ( uint8_t i=0; i < 16-len; i++ ){
+		str[len+i] = ' ';
+	}
+	printSreenText(dev, X, Y, str);
+}
+
+void printSreenFloat(SSD1306_t *dev, uint8_t X, uint8_t Y, char *data1, NUM_OF_DIGIT_t num_digits, float num, char *data2){
+	uint8_t len;
+	char str[16]="";
+	//Convert num to string
+	char strNum[7]="";
+	if ( num_digits == FIVE_DIGITS ){
+		sprintf(strNum, "%5.1f", num);
+	}
+	else if ( num_digits == FOUR_DIGITS ){
+		sprintf(strNum, "%4.1f", num);
+	}
+	else
+		sprintf(strNum, "%3.1f", num);
+	//Join 3 strings
+	strcat(str, data1);
+	strcat(str, strNum);
+	strcat(str, data2);
 	len = strlen(str);
 	//Pad the rest with empty space
 	for ( uint8_t i=0; i < 16-len; i++ ){

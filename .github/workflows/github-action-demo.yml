@@ -28,8 +28,8 @@ jobs:
         run: |
           mkdir output
           ls -lah 
-          cp ./build/advanced_https_ota.bin advanced_https_ota-${{ matrix.targets }}.bin
-          cp ./build/advanced_https_ota.bin ./output
+          cp ./build/battery_monitor.bin battery_monitor-${{ matrix.targets }}.bin
+          cp ./build/battery_monitor.bin ./output
       - name: Archive Firmware Files
         uses: actions/upload-artifact@v3
         with:

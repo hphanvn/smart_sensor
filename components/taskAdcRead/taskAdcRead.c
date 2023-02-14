@@ -23,12 +23,14 @@ static int adcRawBattVoltage;
 static int battVoltage;
 
 void adc_task(void *pvParameter){
+    ESP_LOGI(TAG, "Starting ADC Task\n\n");
     //-------------ADC1 Init---------------//
     adc_oneshot_unit_handle_t adc1_handle;
     adc_oneshot_unit_init_cfg_t init_config1 = {
         .unit_id = ADC_UNIT_1,
     };
     ESP_ERROR_CHECK(adc_oneshot_new_unit(&init_config1, &adc1_handle));
+  
      //-------------ADC1 Config---------------//
     adc_oneshot_chan_cfg_t config = {
         .bitwidth = ADC_BITWIDTH_DEFAULT,

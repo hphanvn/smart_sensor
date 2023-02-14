@@ -43,15 +43,20 @@ void oled_task(void *pvParameter){
 	ssd1306_contrast(&oled, 0xff);
 
     int battVoltage = 0;
+    float temperature = 0.0f;
+    float humidity = 0.0f;
     state_t state = STATE_INIT;
 
     while (1) {
         /* Wait for a message to arrive. */
         xQueueReceive(xQueueAdcBattVolt, &battVoltage, portMAX_DELAY);
+        xQueueReceive(xQueueDht11Humid, &humidity, portMAX_DELAY);
+        xQueueReceive(xQueueDht11Temp, &temperature, portMAX_DELAY);
         state = STATE_DISPLAY__ADC;
         /* Take the mutex to ensure exclusive access to the queue. */
         xSemaphoreTake(xMutexAdcBattVolt, portMAX_DELAY);
-
+        xSemaphoreTake(xMutexDht11Humid, portMAX_DELAY);
+        xSemaphoreTake(xMutexDht11Temp, portMAX_DELAY);
         switch (state){
             case STATE_INIT:
                 printSreenTextCenter(&oled, 0, emptyLine);
@@ -70,8 +75,8 @@ void oled_task(void *pvParameter){
                 printSreenTextCenter(&oled, 1, emptyLine);
                 printSreenTextCenter(&oled, 2, emptyLine);
                 printSreen(&oled, 0, 3, "Batt. = ", battVoltage, "(mV)");
-                printSreenTextCenter(&oled, 4, emptyLine);
-                printSreenTextCenter(&oled, 5, emptyLine);
+                printSreenFloat(&oled, 0, 4, "RH    = ", THREE_DIGITS, humidity, "%");
+                printSreenFloat(&oled, 0, 5, "Temp. = ", THREE_DIGITS, temperature, "C");
                 printSreenTextCenter(&oled, 6, emptyLine);
                 printSreenTextCenter(&oled, 7, emptyLine);
                 vTaskDelay(10 / portTICK_PERIOD_MS);
@@ -84,6 +89,8 @@ void oled_task(void *pvParameter){
 
         /* Give back the mutex. */
         xSemaphoreGive(xMutexAdcBattVolt);
+        xSemaphoreGive(xMutexDht11Humid);
+        xSemaphoreGive(xMutexDht11Temp);
 
     }
     
