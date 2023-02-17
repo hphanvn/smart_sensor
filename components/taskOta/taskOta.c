@@ -40,7 +40,7 @@ static esp_err_t validate_image_header(esp_app_desc_t *new_app_info)
 
 void ota_task(void *pvParameter)
 {
-    ESP_LOGI(TAG, "Starting Advanced OTA example");
+    ESP_LOGI(TAG, "OTA task started");
 
     esp_err_t ota_finish_err = ESP_OK;
     esp_http_client_config_t config = {

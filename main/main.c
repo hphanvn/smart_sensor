@@ -16,19 +16,25 @@
 #include "esp_event.h"
 #include "esp_log.h"
 
+#ifdef HARD_CODE_WIFI
 #include "wifi.h"
+#else
+#include "blufi.h"
+#endif
+
 #include "taskOta.h"
 #include "taskServer.h"
 #include "taskOledDisplay.h"
 #include "taskAdcRead.h"
 #include "taskDHT11.h"
-//For OTA
+
 #include "nvs.h"
 #include "nvs_flash.h"
 #include "esp_netif.h"
-
 #include "driver/gpio.h"
 #include "main.h"
+
+//#define HARD_CODE_WIFI
 
 QueueHandle_t xQueueAdcBattVolt;
 SemaphoreHandle_t xMutexAdcBattVolt;
@@ -39,10 +45,28 @@ SemaphoreHandle_t xMutexDht11Humid;
 QueueHandle_t xQueueDht11Temp;
 SemaphoreHandle_t xMutexDht11Temp;
 
+esp_event_handler_instance_t instance_got_ip;
+
+void post_wifi_config(void){
+    // GPIO initialization
+    gpio_set_direction(LED_PIN, GPIO_MODE_OUTPUT);
+    setup_server();
+    xTaskCreate(&ota_task, "ota_task", 1024 * 8, NULL, 5, NULL);
+}
+
+#ifndef HARD_CODE_WIFI
+static void event_handler(void* arg, esp_event_base_t event_base,
+                                int32_t event_id, void* event_data)
+{
+    // Process events
+    post_wifi_config();
+}
+#endif
 
 void app_main(void)
 {
     // Initialize NVS.
+    //ESP_ERROR_CHECK(nvs_flash_erase());
     esp_err_t err = nvs_flash_init();
     if (err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND) {
         // 1.OTA app partition table has a smaller NVS partition size than the non-OTA
@@ -69,12 +93,13 @@ void app_main(void)
     xTaskCreate(&oled_task, "oled_task", 1024 * 8, NULL, 5, NULL);
     xTaskCreate(&adc_task, "adc_task", 1024 * 8, NULL, 5, NULL);
     xTaskCreate(&dht11_task, "dht11_task", 1024 * 8, NULL, 5, NULL);
-
-    wifiInit();
-    // GPIO initialization
-    gpio_set_direction(LED_PIN, GPIO_MODE_OUTPUT);
-    setup_server();
-
-    xTaskCreate(&ota_task, "ota_task", 1024 * 8, NULL, 6, NULL);
+#ifdef HARD_CODE_WIFI
+    setup_wifi(); 
+    post_wifi_config();
+#else  
+    setup_wifi_via_blufi();
+    ESP_ERROR_CHECK(esp_event_handler_instance_register(IP_EVENT, IP_EVENT_STA_GOT_IP,
+                                                            &event_handler,NULL, &instance_got_ip));
+#endif
 }
 

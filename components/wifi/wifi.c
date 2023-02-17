@@ -12,7 +12,7 @@
 
 #include "protocol_examples_common.h"
 
-void wifiInit(){
+void setup_wifi(){
     /* This helper function configures Wi-Fi or Ethernet, as selected in menuconfig.
      * Read "Establishing Wi-Fi or Ethernet Connection" section in
      * examples/protocols/README.md for more information about this function.
