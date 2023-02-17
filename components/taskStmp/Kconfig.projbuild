@@ -1,0 +1,34 @@
+menu "Stmp Configuration"
+
+    config SMTP_SERVER
+        string "Mail Server"
+        default "smtp.googlemail.com"
+        help
+            Target domain for the example to connect to.
+
+    config SMTP_PORT_NUMBER
+        string "Mail port number"
+        default "587"
+        help
+            Mail port number for the example to connect to.
+
+    config SMTP_SENDER_MAIL
+        string "Sender email"
+        default "my.esp.notification@gmail.com"
+        help
+            Sender's Email address
+
+    config SMTP_SENDER_PASSWORD
+        string "Sender password"
+        default "lkcefrkitkiiuopv"
+        help
+            Sender's email password
+
+    config SMTP_RECIPIENT_MAIL
+        string "Recipient email"
+        default "phanhieubk@gmail.com"
+        help
+            Recipient's email
+
+endmenu
+

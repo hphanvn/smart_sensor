@@ -22,6 +22,7 @@
 #include "blufi.h"
 #endif
 
+#include "taskStmp.h"
 #include "taskOta.h"
 #include "taskServer.h"
 #include "taskOledDisplay.h"
@@ -35,7 +36,7 @@
 #include "main.h"
 
 //#define HARD_CODE_WIFI
-
+#define TASK_STACK_SIZE 1024*8
 QueueHandle_t xQueueAdcBattVolt;
 SemaphoreHandle_t xMutexAdcBattVolt;
 
@@ -51,7 +52,8 @@ void post_wifi_config(void){
     // GPIO initialization
     gpio_set_direction(LED_PIN, GPIO_MODE_OUTPUT);
     setup_server();
-    xTaskCreate(&ota_task, "ota_task", 1024 * 8, NULL, 5, NULL);
+    xTaskCreate(&smtp_client_task, "smtp_client_task", TASK_STACK_SIZE , NULL, 5, NULL);
+    xTaskCreate(&ota_task, "ota_task", TASK_STACK_SIZE , NULL, 5, NULL);
 }
 
 #ifndef HARD_CODE_WIFI
@@ -90,9 +92,9 @@ void app_main(void)
     xMutexDht11Humid = xSemaphoreCreateMutex();
     xMutexDht11Temp = xSemaphoreCreateMutex();
 
-    xTaskCreate(&oled_task, "oled_task", 1024 * 8, NULL, 5, NULL);
-    xTaskCreate(&adc_task, "adc_task", 1024 * 8, NULL, 5, NULL);
-    xTaskCreate(&dht11_task, "dht11_task", 1024 * 8, NULL, 5, NULL);
+    xTaskCreate(&oled_task, "oled_task", TASK_STACK_SIZE, NULL, 5, NULL);
+    xTaskCreate(&adc_task, "adc_task", TASK_STACK_SIZE , NULL, 5, NULL);
+    xTaskCreate(&dht11_task, "dht11_task", TASK_STACK_SIZE , NULL, 5, NULL);
 #ifdef HARD_CODE_WIFI
     setup_wifi(); 
     post_wifi_config();
