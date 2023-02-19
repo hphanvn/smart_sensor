@@ -5,10 +5,14 @@
 #include "freertos/queue.h"
 #include "freertos/semphr.h"
 
+#define TASK_STACK_SIZE 1024*8
 typedef enum {
     STATE_INIT =0,
     STATE_DISPLAY__ADC,
     STATE_DISPLAY__OTA,
+    STATE_WARNING__BATT_TOO_LOW,
+    STATE_WARNING__BATT_TOO_HIGH,
+    STATE_WARNING__BATT_CHARGING,
     MAX_STATE
 }state_t;
 
@@ -29,4 +33,12 @@ extern SemaphoreHandle_t xMutexDht11Humid;
 
 extern QueueHandle_t xQueueDht11Temp;
 extern SemaphoreHandle_t xMutexDht11Temp;
+
+typedef struct {
+    float volt;
+    float temp;
+    float humid;
+    char msg[50];
+}batt_mon_t;
+
 #endif

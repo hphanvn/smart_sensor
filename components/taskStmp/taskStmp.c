@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "freertos/event_groups.h"
 #include "esp_event.h"
 #include "esp_log.h"
 #include "esp_system.h"
@@ -27,6 +28,7 @@
 #include <mbedtls/base64.h>
 #include <sys/param.h>
 
+#include "main.h"
 
 /* Constants that are configurable in menuconfig */
 #define MAIL_SERVER         CONFIG_SMTP_SERVER
@@ -64,8 +66,8 @@ static const char *TAG = "smtp";
 extern const uint8_t server_root_cert_pem_start[] asm("_binary_stmp_cert_pem_start");
 extern const uint8_t server_root_cert_pem_end[]   asm("_binary_stmp_cert_pem_end");
 
-extern const uint8_t esp_logo_png_start[] asm("_binary_esp_logo_png_start");
-extern const uint8_t esp_logo_png_end[]   asm("_binary_esp_logo_png_end");
+// extern const uint8_t esp_logo_png_start[] asm("_binary_esp_logo_png_start");
+// extern const uint8_t esp_logo_png_end[]   asm("_binary_esp_logo_png_end");
 
 static int write_and_get_response(mbedtls_net_context *sock_fd, unsigned char *buf, size_t len)
 {
@@ -243,6 +245,8 @@ void smtp_client_task(void *pvParameters)
     unsigned char base64_buffer[128];
     int ret, len;
     size_t base64_len;
+    batt_mon_t *psBattMon = (batt_mon_t*)pvParameters;
+    batt_mon_t battMon = *psBattMon;
 
     mbedtls_entropy_context entropy;
     mbedtls_ctr_drbg_context ctr_drbg;
@@ -410,10 +414,10 @@ void smtp_client_task(void *pvParameters)
     ESP_LOGI(TAG, "Write Content");
     /* We do not take action if message sending is partly failed. */
     len = snprintf((char *) buf, BUF_SIZE,
-                   "From: %s\r\nSubject: mbed TLS Test mail\r\n"
+                   "From: %s\r\nSubject: %s\r\n"
                    "To: %s\r\n"
                    "MIME-Version: 1.0 (mime-construct 1.9)\n",
-                   "ESP32 SMTP Client", RECIPIENT_MAIL);
+                   "Battery Monitor", battMon.msg, RECIPIENT_MAIL);
 
     /**
      * Note: We are not validating return for some ssl_writes.
@@ -428,34 +432,45 @@ void smtp_client_task(void *pvParameters)
     ret = write_ssl_data(&ssl, (unsigned char *) buf, len);
 
     /* Text */
+    // len = snprintf((char *) buf, BUF_SIZE,
+    //                "Content-Type: text/plain\n"
+    //                "Please use Web browser to see the details.\r\n"
+    //                "\n\n--XYZabcd1234\n");    
     len = snprintf((char *) buf, BUF_SIZE,
                    "Content-Type: text/plain\n"
-                   "This is a simple test mail from the SMTP client example.\r\n"
                    "\r\n"
-                   "Enjoy!\n\n--XYZabcd1234\n");
+                   "Battery voltage: %3.1f (mV).\r\n"
+                   "\r\n"
+                   "Temperature: %3.1f (C).\r\n"
+                   "\r\n"
+                   "Humidity: %3.1f (%%).\r\n"
+                   "\r\n"
+                   "\n\n--XYZabcd1234\n", battMon.volt, 
+                                          battMon.temp,
+                                          battMon.humid);
     ret = write_ssl_data(&ssl, (unsigned char *) buf, len);
 
     /* Attachment */
-    len = snprintf((char *) buf, BUF_SIZE,
-                   "Content-Type: image/png;name=esp_logo.png\n"
-                   "Content-Transfer-Encoding: base64\n"
-                   "Content-Disposition:attachment;filename=\"esp_logo.png\"\r\n\n");
-    ret = write_ssl_data(&ssl, (unsigned char *) buf, len);
+    // len = snprintf((char *) buf, BUF_SIZE,
+    //                "Content-Type: image/png;name=esp_logo.png\n"
+    //                "Content-Transfer-Encoding: base64\n"
+    //                "Content-Disposition:attachment;filename=\"esp_logo.png\"\r\n\n");
+    // ret = write_ssl_data(&ssl, (unsigned char *) buf, len);
 
-    /* Image contents... */
-    const uint8_t *offset = esp_logo_png_start;
-    while (offset < esp_logo_png_end - 1) {
-        int read_bytes = MIN(((sizeof (base64_buffer) - 1) / 4) * 3, esp_logo_png_end - offset - 1);
-        ret = mbedtls_base64_encode((unsigned char *) base64_buffer, sizeof(base64_buffer),
-                                    &base64_len, (unsigned char *) offset, read_bytes);
-        if (ret != 0) {
-            ESP_LOGE(TAG, "Error in mbedtls encode! ret = -0x%x", -ret);
-            goto exit;
-        }
-        offset += read_bytes;
-        len = snprintf((char *) buf, BUF_SIZE, "%s\r\n", base64_buffer);
-        ret = write_ssl_data(&ssl, (unsigned char *) buf, len);
-    }
+    // /* Image contents... */
+    // const uint8_t *offset = esp_logo_png_start;
+    // while (offset < esp_logo_png_end - 1) {
+    //     int read_bytes = MIN(((sizeof (base64_buffer) - 1) / 4) * 3, esp_logo_png_end - offset - 1);
+    //     ret = mbedtls_base64_encode((unsigned char *) base64_buffer, sizeof(base64_buffer),
+    //                                 &base64_len, (unsigned char *) offset, read_bytes);
+    //     if (ret != 0) {
+    //         ESP_LOGE(TAG, "Error in mbedtls encode! ret = -0x%x", -ret);
+    //         goto exit;
+    //     }
+    //     offset += read_bytes;
+    //     len = snprintf((char *) buf, BUF_SIZE, "%s\r\n", base64_buffer);
+    //     ret = write_ssl_data(&ssl, (unsigned char *) buf, len);
+    // }
 
     len = snprintf((char *) buf, BUF_SIZE, "\n--XYZabcd1234\n");
     ret = write_ssl_data(&ssl, (unsigned char *) buf, len);
@@ -489,17 +504,3 @@ exit:
     vTaskDelete(NULL);
 }
 
-// void app_main(void)
-// {
-//     ESP_ERROR_CHECK(nvs_flash_init());
-//     ESP_ERROR_CHECK(esp_netif_init());
-//     ESP_ERROR_CHECK(esp_event_loop_create_default());
-
-//     /**
-//      * This helper function configures Wi-Fi or Ethernet, as selected in menuconfig.
-//      * Read "Establishing Wi-Fi or Ethernet Connection" section in
-//      * examples/protocols/README.md for more information about this function.
-//      */
-//     ESP_ERROR_CHECK(example_connect());
-   
-// }

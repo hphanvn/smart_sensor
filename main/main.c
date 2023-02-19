@@ -16,12 +16,12 @@
 #include "esp_event.h"
 #include "esp_log.h"
 
-#ifdef HARD_CODE_WIFI
-#include "wifi.h"
-#else
-#include "blufi.h"
-#endif
 
+#include "wifi.h"
+#include "blufi.h"
+
+
+#include "taskMqtt.h"
 #include "taskStmp.h"
 #include "taskOta.h"
 #include "taskServer.h"
@@ -35,8 +35,8 @@
 #include "driver/gpio.h"
 #include "main.h"
 
-//#define HARD_CODE_WIFI
-#define TASK_STACK_SIZE 1024*8
+#define HARD_CODE_WIFI
+
 QueueHandle_t xQueueAdcBattVolt;
 SemaphoreHandle_t xMutexAdcBattVolt;
 
@@ -49,11 +49,15 @@ SemaphoreHandle_t xMutexDht11Temp;
 esp_event_handler_instance_t instance_got_ip;
 
 void post_wifi_config(void){
+    xTaskCreate(&oled_task, "oled_task", TASK_STACK_SIZE, NULL, 5, NULL);
+    xTaskCreate(&adc_task, "adc_task", TASK_STACK_SIZE , NULL, 5, NULL);
+    xTaskCreate(&dht11_task, "dht11_task", TASK_STACK_SIZE , NULL, 5, NULL);
+    xTaskCreate(&mqtt_task, "mqtt_task", TASK_STACK_SIZE, NULL, 5, NULL);
     // GPIO initialization
-    gpio_set_direction(LED_PIN, GPIO_MODE_OUTPUT);
-    setup_server();
-    xTaskCreate(&smtp_client_task, "smtp_client_task", TASK_STACK_SIZE , NULL, 5, NULL);
-    xTaskCreate(&ota_task, "ota_task", TASK_STACK_SIZE , NULL, 5, NULL);
+    // gpio_set_direction(LED_PIN, GPIO_MODE_OUTPUT);
+    // setup_server();
+    //OTA need to be trigger by web or app or button!
+    //xTaskCreate(&ota_task, "ota_task", TASK_STACK_SIZE , NULL, 4, NULL);
 }
 
 #ifndef HARD_CODE_WIFI
@@ -92,9 +96,7 @@ void app_main(void)
     xMutexDht11Humid = xSemaphoreCreateMutex();
     xMutexDht11Temp = xSemaphoreCreateMutex();
 
-    xTaskCreate(&oled_task, "oled_task", TASK_STACK_SIZE, NULL, 5, NULL);
-    xTaskCreate(&adc_task, "adc_task", TASK_STACK_SIZE , NULL, 5, NULL);
-    xTaskCreate(&dht11_task, "dht11_task", TASK_STACK_SIZE , NULL, 5, NULL);
+
 #ifdef HARD_CODE_WIFI
     setup_wifi(); 
     post_wifi_config();

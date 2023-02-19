@@ -40,18 +40,19 @@ void adc_task(void *pvParameter){
     //-------------ADC1 Calibration Init---------------//
     adc_cali_handle_t adc1_cali_handle = NULL;
     bool do_calibration1 = example_adc_calibration_init(ADC_UNIT_1, EXAMPLE_ADC_ATTEN, &adc1_cali_handle);
-
+    float fBattVolt;
     for(;;){
         ESP_ERROR_CHECK(adc_oneshot_read(adc1_handle, AI_BATT__VOLTAGE, &adcRawBattVoltage));
         ESP_LOGD(TAG, "ADC%d Channel[%d] Raw Data: %d", ADC_UNIT_1 + 1, AI_BATT__VOLTAGE, &adcRawBattVoltage);
         if (do_calibration1) {
             ESP_ERROR_CHECK(adc_cali_raw_to_voltage(adc1_cali_handle, adcRawBattVoltage, &battVoltage));
             ESP_LOGD(TAG, "ADC%d Channel[%d] Cali Voltage: %d mV", ADC_UNIT_1 + 1, AI_BATT__VOLTAGE, battVoltage);
+            fBattVolt = (float) battVoltage;
             /* Take the mutex to ensure exclusive access to the queue. */
             xSemaphoreTake(xMutexAdcBattVolt, portMAX_DELAY);
 
             /* Send the next value to the queue. */
-            xQueueSend(xQueueAdcBattVolt, &battVoltage, 0);
+            xQueueSend(xQueueAdcBattVolt, &fBattVolt, 0);
 
              /* Give back the mutex. */
             xSemaphoreGive(xMutexAdcBattVolt);

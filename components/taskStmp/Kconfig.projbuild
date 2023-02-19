@@ -26,7 +26,7 @@ menu "Stmp Configuration"
 
     config SMTP_RECIPIENT_MAIL
         string "Recipient email"
-        default "phanhieubk@gmail.com"
+        default "jessica852258@gmail.com"
         help
             Recipient's email
 

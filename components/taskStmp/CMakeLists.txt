@@ -3,7 +3,7 @@ set(component_srcs "taskStmp.c")
 idf_component_register(SRCS "${component_srcs}"
                        PRIV_REQUIRES esp_event
                        PRIV_REQUIRES mbedtls
-                       PRIV_REQUIRES esp_https_ota
+                       PRIV_REQUIRES main
                        INCLUDE_DIRS "."
                        # Embed the server root certificate into the final binary
                        EMBED_TXTFILES ${project_dir}/server_certs/stmp_cert.pem esp_logo.png
